@@ -1,0 +1,767 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--z-navy:#0a0f1e;--z-blue:#1a3a6b;--z-accent:#2563eb;--z-gold:#f59e0b;--z-teal:#0d9488;--z-purple:#7c3aed;--z-coral:#f43f5e;--z-green:#10b981}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+body{font-family:var(--font-sans,"system-ui",sans-serif)}
+.wrap{max-width:680px;margin:0 auto;padding:0 0 40px}
+/* NAV */
+.nav{display:flex;gap:6px;flex-wrap:wrap;padding:16px 0 20px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:0}
+.nav-btn{font-size:11px;padding:5px 10px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.nav-btn.active,.nav-btn:hover{background:var(--color-background-primary);color:var(--color-text-primary);border-color:var(--color-border-secondary)}
+.nav-btn.active{font-weight:500;color:var(--z-accent);border-color:var(--z-accent)}
+/* SECTIONS */
+.section{display:none;padding-top:28px}
+.section.active{display:block}
+/* HERO */
+.hero-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:#2563eb;background:#eff6ff;border:0.5px solid #bfdbfe;border-radius:20px;padding:4px 12px;margin-bottom:16px}
+.hero-title{font-size:28px;font-weight:500;line-height:1.25;color:var(--color-text-primary);margin-bottom:12px}
+.hero-title span{color:#2563eb}
+.hero-sub{font-size:15px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:24px;max-width:560px}
+.hero-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.hm-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px 12px;text-align:center}
+.hm-num{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.hm-num.blue{color:#2563eb}.hm-num.gold{color:#f59e0b}.hm-num.teal{color:#0d9488}.hm-num.green{color:#10b981}
+.hm-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:3px}
+.hero-tagline{font-size:13px;color:var(--color-text-secondary);border-left:2px solid #2563eb;padding-left:12px;font-style:italic}
+/* ECOSYSTEM */
+.eco-center{text-align:center;margin-bottom:24px}
+.eco-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-secondary);margin-bottom:6px}
+.eco-core{display:inline-block;background:#2563eb;color:#fff;font-size:15px;font-weight:500;padding:12px 28px;border-radius:var(--border-radius-lg)}
+.eco-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.eco-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 12px;cursor:pointer;transition:all .15s}
+.eco-card:hover{border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+.eco-icon{font-size:18px;margin-bottom:6px}
+.eco-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.eco-desc{font-size:11px;color:var(--color-text-secondary);margin-top:3px;line-height:1.5}
+.eco-flow{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:16px;border:0.5px solid var(--color-border-tertiary)}
+.eco-flow-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:10px}
+.flow-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.flow-node{font-size:11px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:20px;padding:5px 10px;color:var(--color-text-primary)}
+.flow-arr{font-size:12px;color:var(--color-text-secondary)}
+/* DEPARTMENTS */
+.dept-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.dept-tab{font-size:12px;padding:6px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.dept-tab.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.dept-panel{display:none}.dept-panel.active{display:block}
+.use-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.use-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px}
+.use-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.use-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.use-tag{font-size:10px;padding:2px 8px;border-radius:20px;background:#eff6ff;color:#2563eb;border:0.5px solid #bfdbfe}
+.use-tag.ops{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+.use-tag.mkt{background:#fdf4ff;color:#6b21a8;border-color:#e9d5ff}
+.use-tag.dev{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+.use-tag.bi{background:#f0fdf4;color:#065f46;border-color:#a7f3d0}
+.use-tag.dsn{background:#fef3c7;color:#92400e;border-color:#fde68a}
+.use-problem{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px}
+.use-solution{font-size:11px;color:var(--color-text-primary);line-height:1.6}
+.use-impact{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--color-border-tertiary)}
+.use-impact-val{font-size:13px;font-weight:500;color:#10b981}
+.use-impact-lbl{font-size:11px;color:var(--color-text-secondary)}
+.mock-shell{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;margin-top:12px}
+.mock-bar{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.mock-dots{display:flex;gap:4px}.mock-dot{width:8px;height:8px;border-radius:50%}
+.mock-title{font-size:11px;color:var(--color-text-secondary)}
+.mock-body{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px}
+.mock-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.mock-row:last-child{border-bottom:none}
+.mock-field{font-size:11px;color:var(--color-text-secondary)}
+.mock-val{font-size:11px;font-weight:500;color:var(--color-text-primary)}
+.mock-val.green{color:#10b981}.mock-val.blue{color:#2563eb}.mock-val.gold{color:#f59e0b}
+.mock-ai{display:flex;gap:8px;margin-top:10px;align-items:flex-start}
+.mock-ai-bubble{background:#eff6ff;border-radius:var(--border-radius-md);padding:8px 10px;font-size:11px;color:#1e40af;line-height:1.5;flex:1;border:0.5px solid #bfdbfe}
+.mock-ai-tag{font-size:10px;font-weight:500;color:#2563eb;min-width:32px;margin-top:2px}
+/* INNOVATION LAB */
+.lab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.lab-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px;cursor:pointer;transition:all .15s}
+.lab-card:hover{border-color:var(--color-border-secondary);transform:translateY(-1px)}
+.lab-num{font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:4px}
+.lab-name{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.lab-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.lab-badge{display:inline-block;font-size:10px;margin-top:8px;padding:2px 8px;border-radius:20px;font-weight:500}
+.badge-blue{background:#eff6ff;color:#2563eb;border:0.5px solid #bfdbfe}
+.badge-purple{background:#faf5ff;color:#7c3aed;border:0.5px solid #e9d5ff}
+.badge-teal{background:#f0fdfa;color:#0f766e;border:0.5px solid #99f6e4}
+.badge-gold{background:#fffbeb;color:#b45309;border:0.5px solid #fde68a}
+.badge-coral{background:#fff1f2;color:#be123c;border:0.5px solid #fecdd3}
+/* COWORK */
+.cowork-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.cw-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px}
+.cw-role{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.cw-tasks{font-size:11px;color:var(--color-text-secondary);line-height:1.6}
+.wf-block{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:16px;border:0.5px solid var(--color-border-tertiary)}
+.wf-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:12px}
+.wf-steps{display:flex;gap:0;align-items:center;flex-wrap:wrap;row-gap:8px}
+.wf-step{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:80px}
+.wf-step-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 10px;font-size:11px;font-weight:500;color:var(--color-text-primary);text-align:center;width:80px}
+.wf-step-lbl{font-size:10px;color:var(--color-text-secondary);text-align:center}
+.wf-arr{font-size:14px;color:var(--color-text-secondary);margin:0 4px;padding-bottom:14px}
+/* ROADMAP */
+.rm-tabs{display:flex;gap:8px;margin-bottom:20px}
+.rm-tab{flex:1;text-align:center;padding:10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);cursor:pointer;transition:all .15s}
+.rm-tab.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.rm-tab-label{font-size:12px;font-weight:500}
+.rm-tab-sub{font-size:10px;margin-top:2px;opacity:.8}
+.rm-panel{display:none}.rm-panel.active{display:block}
+.rm-list{display:flex;flex-direction:column;gap:10px}
+.rm-item{display:flex;gap:12px;align-items:flex-start;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px}
+.rm-item-ico{width:32px;height:32px;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ico-blue{background:#eff6ff}.ico-purple{background:#faf5ff}.ico-teal{background:#f0fdfa}.ico-gold{background:#fffbeb}
+.rm-item-body{}
+.rm-item-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.rm-item-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.rm-impact{display:inline-block;font-size:10px;margin-top:6px;padding:2px 8px;border-radius:20px;background:#f0fdf4;color:#166534;border:0.5px solid #bbf7d0;font-weight:500}
+/* ROI */
+.roi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+.roi-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:16px}
+.roi-val{font-size:26px;font-weight:500;color:var(--color-text-primary)}
+.roi-val.blue{color:#2563eb}.roi-val.green{color:#10b981}.roi-val.gold{color:#f59e0b}.roi-val.purple{color:#7c3aed}
+.roi-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:3px}
+.roi-sub{font-size:11px;color:var(--color-text-secondary);margin-top:6px}
+.roi-bar-block{margin-bottom:20px}
+.roi-bar-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:12px}
+.rb-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.rb-label{font-size:11px;color:var(--color-text-primary);min-width:90px}
+.rb-track{flex:1;background:var(--color-border-tertiary);border-radius:4px;height:8px;overflow:hidden}
+.rb-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.rb-pct{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:34px;text-align:right}
+/* VISION */
+.vision-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.vision-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px}
+.vision-icon{font-size:20px;margin-bottom:8px}
+.vision-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.vision-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.vision-cta{text-align:center;padding:28px 20px;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary)}
+.vision-cta-title{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.vision-cta-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:16px;line-height:1.6}
+.cta-btn{display:inline-block;background:#2563eb;color:#fff;font-size:13px;font-weight:500;padding:10px 24px;border-radius:var(--border-radius-md);cursor:pointer;border:none}
+.cta-btn:hover{background:#1d4ed8}
+/* shared */
+.sec-title{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:20px;line-height:1.6}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:20px 0}
+</style>
+
+<h2 class="sr-only">Zondela Travel — AI-Native Agency Executive Demo powered by Claude</h2>
+
+<div class="wrap">
+
+<!-- NAV -->
+<nav class="nav" aria-label="Demo sections">
+  <button class="nav-btn active" onclick="showSection('hero')">Overview</button>
+  <button class="nav-btn" onclick="showSection('eco')">Ecosystem</button>
+  <button class="nav-btn" onclick="showSection('dept')">Departments</button>
+  <button class="nav-btn" onclick="showSection('lab')">Innovation Lab</button>
+  <button class="nav-btn" onclick="showSection('cowork')">Human + Claude</button>
+  <button class="nav-btn" onclick="showSection('roadmap')">Roadmap</button>
+  <button class="nav-btn" onclick="showSection('roi')">ROI</button>
+  <button class="nav-btn" onclick="showSection('vision')">Vision</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="section active">
+  <div class="hero-badge">
+    <span style="width:6px;height:6px;border-radius:50%;background:#2563eb;animation:pulse 1.5s infinite"></span>
+    AI-Native Transformation · Powered by Claude
+  </div>
+  <h1 class="hero-title">Zondela Travel as an<br><span>AI-Native Agency</span><br>Powered by Claude</h1>
+  <p class="hero-sub">Claude becomes the operating system of Zondela — embedded in every team, every workflow, and every customer touchpoint. From cotizaciones to campaigns, from itineraries to intelligence.</p>
+  <div class="hero-metrics">
+    <div class="hm-card"><div class="hm-num blue">8×</div><div class="hm-lbl">Faster proposals</div></div>
+    <div class="hm-card"><div class="hm-num gold">40%</div><div class="hm-lbl">Cost reduction</div></div>
+    <div class="hm-card"><div class="hm-num teal">3×</div><div class="hm-lbl">Lead conversion</div></div>
+    <div class="hm-card"><div class="hm-num green">24/7</div><div class="hm-lbl">AI availability</div></div>
+  </div>
+  <p class="hero-tagline">"The agencies that win in 2025–2030 will be those where AI amplifies every human decision — not replaces it. Zondela can be that agency."</p>
+  <div class="divider"></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:0">
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:14px;border:0.5px solid var(--color-border-tertiary)">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">Today without AI</div>
+      <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.7">Manual cotizaciones · 3-day proposals · Siloed teams · Reactive marketing · Generic content</div>
+    </div>
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:14px;border:0.5px solid var(--color-border-tertiary)">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">Phase 1 — Quick wins</div>
+      <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.7">AI proposals · Content engine · Itinerary builder · Internal copilot · Research assistant</div>
+    </div>
+    <div style="background:#eff6ff;border-radius:var(--border-radius-lg);padding:14px;border:0.5px solid #bfdbfe">
+      <div style="font-size:12px;font-weight:500;color:#1e40af;margin-bottom:6px">Full AI-native state</div>
+      <div style="font-size:11px;color:#3b82f6;line-height:1.7">Autonomous concierge · Predictive pricing · AI studio · Self-optimizing funnels · BI dashboards</div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section id="eco" class="section">
+  <h2 class="sec-title">Claude ecosystem overview</h2>
+  <p class="sec-sub">Every Claude product becomes a capability layer for Zondela — connected, collaborative, and compounding.</p>
+  <div class="eco-center">
+    <div class="eco-label">Core platform</div>
+    <div class="eco-core">Claude by Anthropic</div>
+    <div style="height:12px"></div>
+  </div>
+  <div class="eco-grid">
+    <div class="eco-card" onclick="sendPrompt('Tell me more about how Zondela could use Claude Chat for travel sales')">
+      <div class="eco-icon">💬</div>
+      <div class="eco-name">Claude Chat</div>
+      <div class="eco-desc">Daily copilot for advisors, research, content drafting, client comms</div>
+    </div>
+    <div class="eco-card" onclick="sendPrompt('How would Zondela use Claude Code to build travel tools?')">
+      <div class="eco-icon">⌨️</div>
+      <div class="eco-name">Claude Code</div>
+      <div class="eco-desc">Build internal tools, cotizador apps, CRM automations, API integrations</div>
+    </div>
+    <div class="eco-card" onclick="sendPrompt('What Artifacts would be most useful for Zondela Travel?')">
+      <div class="eco-icon">📄</div>
+      <div class="eco-name">Artifacts</div>
+      <div class="eco-desc">Interactive proposals, live dashboards, calculators, client-facing tools</div>
+    </div>
+    <div class="eco-card" onclick="sendPrompt('How can Zondela use Claude Research for travel intelligence?')">
+      <div class="eco-icon">🔍</div>
+      <div class="eco-name">Research</div>
+      <div class="eco-desc">Deep destination intel, competitor analysis, trend reports, supplier research</div>
+    </div>
+    <div class="eco-card" onclick="sendPrompt('What kind of analysis can Claude do for travel business intelligence?')">
+      <div class="eco-icon">📊</div>
+      <div class="eco-name">Analysis</div>
+      <div class="eco-desc">Revenue forecasting, pricing analysis, customer segmentation, ROI reports</div>
+    </div>
+    <div class="eco-card" onclick="sendPrompt('How would Claude Cowork change team collaboration at Zondela?')">
+      <div class="eco-icon">🤝</div>
+      <div class="eco-name">Cowork</div>
+      <div class="eco-desc">Team AI workflows, shared knowledge base, cross-dept coordination</div>
+    </div>
+    <div class="eco-card" onclick="sendPrompt('What automations would help Zondela Travel the most?')">
+      <div class="eco-icon">⚡</div>
+      <div class="eco-name">Automations</div>
+      <div class="eco-desc">Follow-up sequences, report generation, lead scoring, booking triggers</div>
+    </div>
+    <div class="eco-card" onclick="sendPrompt('How can Claude assist with design and creative work at a travel agency?')">
+      <div class="eco-icon">🎨</div>
+      <div class="eco-name">Design assist</div>
+      <div class="eco-desc">Creative briefs, campaign concepts, landing page copy, brand consistency</div>
+    </div>
+  </div>
+  <div class="eco-flow">
+    <div class="eco-flow-title">Example connected workflow — inbound lead to closed sale</div>
+    <div class="flow-row">
+      <div class="flow-node">Lead arrives</div>
+      <div class="flow-arr">→</div>
+      <div class="flow-node">Claude qualifies</div>
+      <div class="flow-arr">→</div>
+      <div class="flow-node">Research runs</div>
+      <div class="flow-arr">→</div>
+      <div class="flow-node">Proposal drafted</div>
+      <div class="flow-arr">→</div>
+      <div class="flow-node">Artifact delivered</div>
+      <div class="flow-arr">→</div>
+      <div class="flow-node">Follow-up auto</div>
+      <div class="flow-arr">→</div>
+      <div class="flow-node">CRM updated</div>
+      <div class="flow-arr">→</div>
+      <div class="flow-node">Sale closed</div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPARTMENTS -->
+<section id="dept" class="section">
+  <h2 class="sec-title">Use cases by department</h2>
+  <p class="sec-sub">Select a department to see specific workflows, mock demos, and expected impact.</p>
+  <div class="dept-tabs">
+    <button class="dept-tab active" onclick="showDept('sales')">Sales</button>
+    <button class="dept-tab" onclick="showDept('ops')">Operations</button>
+    <button class="dept-tab" onclick="showDept('mkt')">Marketing</button>
+    <button class="dept-tab" onclick="showDept('dsn')">Design</button>
+    <button class="dept-tab" onclick="showDept('dev')">Web / Dev</button>
+    <button class="dept-tab" onclick="showDept('bi')">Executive / BI</button>
+  </div>
+
+  <!-- SALES -->
+  <div id="dept-sales" class="dept-panel active">
+    <div class="use-grid">
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">AI cotizador copilot</span><span class="use-tag">Sales</span></div>
+        <div class="use-problem">Problem: advisors spend 2–4 hrs per custom quote</div>
+        <div class="use-solution">Claude generates full itinerary + pricing breakdown in minutes based on client profile and destination data</div>
+        <div class="use-impact"><span class="use-impact-val">8× faster</span><span class="use-impact-lbl">quote generation</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Lead qualification AI</span><span class="use-tag">Sales</span></div>
+        <div class="use-problem">Problem: team spends time on low-intent leads</div>
+        <div class="use-solution">Claude scores and categorizes inbound leads, auto-responds with targeted questions, surfaces hot leads to advisors</div>
+        <div class="use-impact"><span class="use-impact-val">+60%</span><span class="use-impact-lbl">qualified pipeline</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Proposal engine</span><span class="use-tag">Sales</span></div>
+        <div class="use-problem">Problem: proposals are inconsistent and slow</div>
+        <div class="use-solution">Generates branded, personalized travel proposals as interactive Artifacts with day-by-day itineraries and pricing</div>
+        <div class="use-impact"><span class="use-impact-val">3× more</span><span class="use-impact-lbl">proposals sent/week</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Auto follow-up sequences</span><span class="use-tag">Sales</span></div>
+        <div class="use-problem">Problem: leads go cold due to slow follow-up</div>
+        <div class="use-solution">Claude drafts personalized follow-up emails triggered by CRM activity, adjusting tone and urgency by lead stage</div>
+        <div class="use-impact"><span class="use-impact-val">+45%</span><span class="use-impact-lbl">follow-up rate</span></div>
+      </div>
+    </div>
+    <div class="mock-shell">
+      <div class="mock-bar">
+        <div class="mock-dots"><div class="mock-dot" style="background:#ef4444"></div><div class="mock-dot" style="background:#f59e0b"></div><div class="mock-dot" style="background:#22c55e"></div></div>
+        <div class="mock-title">AI Cotizador — Zondela internal tool</div>
+      </div>
+      <div class="mock-body">
+        <div class="mock-row"><span class="mock-field">Destino</span><span class="mock-val">Toscana, Italia · 10 noches</span></div>
+        <div class="mock-row"><span class="mock-field">Viajeros</span><span class="mock-val">2 adultos, luna de miel</span></div>
+        <div class="mock-row"><span class="mock-field">Presupuesto</span><span class="mock-val gold">$180,000–$230,000 MXN</span></div>
+        <div class="mock-row"><span class="mock-field">Nivel servicio</span><span class="mock-val">Lujo boutique</span></div>
+        <div class="mock-row"><span class="mock-field">Estado propuesta</span><span class="mock-val green">Generada en 2 min 14 seg</span></div>
+      </div>
+      <div class="mock-ai">
+        <div class="mock-ai-tag">Claude</div>
+        <div class="mock-ai-bubble">Propuesta lista: 10 noches con vuelo AA desde GDL, 3 alojamientos boutique certificados, tour privado en Florencia, cena en viñedo incluida. Precio sugerido $198,500 MXN. ¿Ajusto algo antes de enviar al cliente?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPS -->
+  <div id="dept-ops" class="dept-panel">
+    <div class="use-grid">
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Itinerary builder</span><span class="use-tag ops">Ops</span></div>
+        <div class="use-problem">Problem: manual itinerary creation takes days</div>
+        <div class="use-solution">Claude assembles complete day-by-day itineraries from supplier data, preferences, and flight logistics in minutes</div>
+        <div class="use-impact"><span class="use-impact-val">5 hrs → 12 min</span><span class="use-impact-lbl">per itinerary</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">SOP assistant</span><span class="use-tag ops">Ops</span></div>
+        <div class="use-problem">Problem: team wastes time finding internal procedures</div>
+        <div class="use-solution">Claude becomes the internal knowledge layer — instantly answers process questions, escalations, and supplier protocols</div>
+        <div class="use-impact"><span class="use-impact-val">−70%</span><span class="use-impact-lbl">internal queries</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Supplier intelligence</span><span class="use-tag ops">Ops</span></div>
+        <div class="use-problem">Problem: supplier data scattered across emails and docs</div>
+        <div class="use-solution">Claude consolidates, summarizes, and surfaces relevant supplier info (rates, reviews, availability) on demand</div>
+        <div class="use-impact"><span class="use-impact-val">+30%</span><span class="use-impact-lbl">supplier utilization</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Crisis & change management</span><span class="use-tag ops">Ops</span></div>
+        <div class="use-problem">Problem: flight changes and emergencies require manual rework</div>
+        <div class="use-solution">Claude monitors booking flags and drafts rebooking options and client communications automatically</div>
+        <div class="use-impact"><span class="use-impact-val">2× faster</span><span class="use-impact-lbl">resolution time</span></div>
+      </div>
+    </div>
+    <div class="mock-shell">
+      <div class="mock-bar">
+        <div class="mock-dots"><div class="mock-dot" style="background:#ef4444"></div><div class="mock-dot" style="background:#f59e0b"></div><div class="mock-dot" style="background:#22c55e"></div></div>
+        <div class="mock-title">Itinerary Builder — Zondela Ops</div>
+      </div>
+      <div class="mock-body">
+        <div class="mock-row"><span class="mock-field">Día 1 · Roma</span><span class="mock-val blue">Llegada · Hotel Inghilterra · Traslado privado</span></div>
+        <div class="mock-row"><span class="mock-field">Día 2 · Roma</span><span class="mock-val">Tour Vaticano · Trastevere a pie · Cena rooftop</span></div>
+        <div class="mock-row"><span class="mock-field">Día 3 · Florencia</span><span class="mock-val">Tren Freccia · Galería Uffizi · Hotel Savoy</span></div>
+        <div class="mock-row"><span class="mock-field">Logística</span><span class="mock-val green">Sin conflictos detectados · Confirmado</span></div>
+      </div>
+      <div class="mock-ai">
+        <div class="mock-ai-tag">Claude</div>
+        <div class="mock-ai-bubble">Itinerario armado. Detecté que el Día 4 tiene traslado aeropuerto con solo 90 min — recomiendo mover el almuerzo 45 min antes. ¿Actualizo y genero PDF para el cliente?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKETING -->
+  <div id="dept-mkt" class="dept-panel">
+    <div class="use-grid">
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Content engine</span><span class="use-tag mkt">Marketing</span></div>
+        <div class="use-problem">Problem: content team can't keep up with demand</div>
+        <div class="use-solution">Claude produces blog posts, social copy, email campaigns, and SEO content at scale — always on-brand</div>
+        <div class="use-impact"><span class="use-impact-val">20× output</span><span class="use-impact-lbl">content volume</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Campaign ideation</span><span class="use-tag mkt">Marketing</span></div>
+        <div class="use-problem">Problem: campaign briefs take weeks of brainstorming</div>
+        <div class="use-solution">Claude generates full campaign concepts with messaging, channels, audience targeting, and creative directions in hours</div>
+        <div class="use-impact"><span class="use-impact-val">10 days → 2 hrs</span><span class="use-impact-lbl">brief creation</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Travel trend research</span><span class="use-tag mkt">Marketing</span></div>
+        <div class="use-problem">Problem: trend reports are expensive and slow</div>
+        <div class="use-solution">Claude runs deep research on travel trends, competitive landscape, and emerging destinations with cited sources</div>
+        <div class="use-impact"><span class="use-impact-val">+40%</span><span class="use-impact-lbl">content relevance</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Ad copy & SEO engine</span><span class="use-tag mkt">Marketing</span></div>
+        <div class="use-problem">Problem: paid and organic performance is inconsistent</div>
+        <div class="use-solution">Claude generates and A/B tests ad variants, meta descriptions, landing page copy across all destinations</div>
+        <div class="use-impact"><span class="use-impact-val">+35%</span><span class="use-impact-lbl">organic traffic</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESIGN -->
+  <div id="dept-dsn" class="dept-panel">
+    <div class="use-grid">
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Creative brief generator</span><span class="use-tag dsn">Design</span></div>
+        <div class="use-problem">Problem: briefs lack detail and delay production</div>
+        <div class="use-solution">Claude generates structured creative briefs from a campaign idea — with tone, references, do's/don'ts, and formats</div>
+        <div class="use-impact"><span class="use-impact-val">−80%</span><span class="use-impact-lbl">brief prep time</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Landing page concepts</span><span class="use-tag dsn">Design</span></div>
+        <div class="use-problem">Problem: design team bottleneck on new destination pages</div>
+        <div class="use-solution">Claude drafts wireframe-level copy, section structure, CTAs, and hero narratives for new landing pages</div>
+        <div class="use-impact"><span class="use-impact-val">3× faster</span><span class="use-impact-lbl">page launch time</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Brand voice consistency</span><span class="use-tag dsn">Design</span></div>
+        <div class="use-problem">Problem: content from different team members feels off-brand</div>
+        <div class="use-solution">Claude acts as brand guardian — reviewing and rewriting copy to match Zondela's voice guidelines automatically</div>
+        <div class="use-impact"><span class="use-impact-val">100%</span><span class="use-impact-lbl">brand consistency</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Campaign ideation sessions</span><span class="use-tag dsn">Design</span></div>
+        <div class="use-problem">Problem: creative ideation sessions are unstructured</div>
+        <div class="use-solution">Claude facilitates structured ideation — generating 20+ campaign angles, visual concepts, and emotional hooks</div>
+        <div class="use-impact"><span class="use-impact-val">5× more</span><span class="use-impact-lbl">ideas per session</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEV -->
+  <div id="dept-dev" class="dept-panel">
+    <div class="use-grid">
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Cotizador app</span><span class="use-tag dev">Dev</span></div>
+        <div class="use-problem">Problem: no real-time quote tool for advisors or web</div>
+        <div class="use-solution">Claude Code builds an interactive quote calculator — embedded in the website and internal tools — with live pricing logic</div>
+        <div class="use-impact"><span class="use-impact-val">Live in 2 weeks</span><span class="use-impact-lbl">vs 3 months agency</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">CRM automations</span><span class="use-tag dev">Dev</span></div>
+        <div class="use-problem">Problem: manual CRM updates slow the sales team</div>
+        <div class="use-solution">Claude Code writes automation scripts that update CRM on booking events, move leads through stages, trigger alerts</div>
+        <div class="use-impact"><span class="use-impact-val">−4 hrs/week</span><span class="use-impact-lbl">per advisor</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Chatbot concierge</span><span class="use-tag dev">Dev</span></div>
+        <div class="use-problem">Problem: website visitors don't convert</div>
+        <div class="use-solution">Claude-powered chat widget qualifies visitors, recommends packages, books consults, and escalates hot leads 24/7</div>
+        <div class="use-impact"><span class="use-impact-val">+28%</span><span class="use-impact-lbl">web conversion</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Internal tools & portals</span><span class="use-tag dev">Dev</span></div>
+        <div class="use-problem">Problem: team uses scattered tools and spreadsheets</div>
+        <div class="use-solution">Claude Code builds lightweight internal apps — availability checker, supplier DB, itinerary manager — fast and maintainable</div>
+        <div class="use-impact"><span class="use-impact-val">1 dev</span><span class="use-impact-lbl">output of a team of 4</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BI -->
+  <div id="dept-bi" class="dept-panel">
+    <div class="use-grid">
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Revenue forecasting</span><span class="use-tag bi">BI</span></div>
+        <div class="use-problem">Problem: finance relies on intuition, not models</div>
+        <div class="use-solution">Claude analyzes historical booking data and market conditions to generate rolling revenue forecasts with confidence ranges</div>
+        <div class="use-impact"><span class="use-impact-val">+25%</span><span class="use-impact-lbl">forecast accuracy</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Executive dashboards</span><span class="use-tag bi">BI</span></div>
+        <div class="use-problem">Problem: leadership lacks real-time business visibility</div>
+        <div class="use-solution">Claude generates live narrative dashboards — "here's what's happening and why" — beyond just charts and numbers</div>
+        <div class="use-impact"><span class="use-impact-val">Daily</span><span class="use-impact-lbl">actionable insights</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Growth planning</span><span class="use-tag bi">BI</span></div>
+        <div class="use-problem">Problem: strategic planning is slow and assumption-heavy</div>
+        <div class="use-solution">Claude models growth scenarios, identifies highest-ROI channels, and structures quarterly OKRs from business data</div>
+        <div class="use-impact"><span class="use-impact-val">3 days → 3 hrs</span><span class="use-impact-lbl">planning cycles</span></div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-head"><span class="use-title">Customer segmentation</span><span class="use-tag bi">BI</span></div>
+        <div class="use-problem">Problem: all clients treated the same in campaigns</div>
+        <div class="use-solution">Claude analyzes booking history to create dynamic segments with tailored engagement strategies per profile</div>
+        <div class="use-impact"><span class="use-impact-val">+50%</span><span class="use-impact-lbl">campaign ROAS</span></div>
+      </div>
+    </div>
+    <div class="mock-shell">
+      <div class="mock-bar">
+        <div class="mock-dots"><div class="mock-dot" style="background:#ef4444"></div><div class="mock-dot" style="background:#f59e0b"></div><div class="mock-dot" style="background:#22c55e"></div></div>
+        <div class="mock-title">Executive AI Brief — Monday, April 28</div>
+      </div>
+      <div class="mock-body">
+        <div class="mock-row"><span class="mock-field">Ventas MTD</span><span class="mock-val green">$2.4M MXN · +18% vs mes ant.</span></div>
+        <div class="mock-row"><span class="mock-field">Pipeline activo</span><span class="mock-val blue">47 propuestas · $8.1M estimado</span></div>
+        <div class="mock-row"><span class="mock-field">Destino top</span><span class="mock-val">Europa · 34% del total</span></div>
+        <div class="mock-row"><span class="mock-field">Alerta</span><span class="mock-val" style="color:#f59e0b">Reservas Caribe −12% · revisar</span></div>
+      </div>
+      <div class="mock-ai">
+        <div class="mock-ai-tag">Claude</div>
+        <div class="mock-ai-bubble">La caída en Caribe coincide con el alza de tarifas de American en GDL. Recomiendo activar paquete todo incluido con Aeromar como alternativa. ¿Quieres que prepare la propuesta de campaña?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INNOVATION LAB -->
+<section id="lab" class="section">
+  <h2 class="sec-title">Innovation lab — 10 future products</h2>
+  <p class="sec-sub">Ideas that position Zondela as the most advanced travel agency in Latin America. Each one is buildable with Claude today.</p>
+  <div class="lab-grid">
+    <div class="lab-card" onclick="sendPrompt('How would Zondela build an AI Travel Concierge using Claude?')">
+      <div class="lab-num">01</div>
+      <div class="lab-name">AI Travel Concierge</div>
+      <div class="lab-desc">WhatsApp + web chatbot that handles end-to-end trip planning, changes, and support — available 24/7, in Spanish and English.</div>
+      <span class="lab-badge badge-blue">Claude Chat + API</span>
+    </div>
+    <div class="lab-card" onclick="sendPrompt('Design a personalized trip generator for Zondela Travel clients')">
+      <div class="lab-num">02</div>
+      <div class="lab-name">Personalized trip generator</div>
+      <div class="lab-desc">Clients answer 5 questions and receive a fully customized 7-day itinerary with hotels, activities, and pricing in under 60 seconds.</div>
+      <span class="lab-badge badge-purple">Artifacts + Claude</span>
+    </div>
+    <div class="lab-card" onclick="sendPrompt('What would a dynamic quote engine look like for Zondela?')">
+      <div class="lab-num">03</div>
+      <div class="lab-name">Dynamic quote engine</div>
+      <div class="lab-desc">Real-time pricing tool that factors supplier rates, seasonality, margins, and competitor pricing to generate optimal quotes instantly.</div>
+      <span class="lab-badge badge-teal">Claude Code + API</span>
+    </div>
+    <div class="lab-card" onclick="sendPrompt('How would an internal AI travel advisor work at Zondela?')">
+      <div class="lab-num">04</div>
+      <div class="lab-name">Internal AI travel advisor</div>
+      <div class="lab-desc">A Claude-powered internal assistant that knows all Zondela's suppliers, SOPs, pricing rules, and client history — lives in Slack or Teams.</div>
+      <span class="lab-badge badge-blue">Claude + Cowork</span>
+    </div>
+    <div class="lab-card" onclick="sendPrompt('Describe a Marketing AI Studio for a travel agency like Zondela')">
+      <div class="lab-num">05</div>
+      <div class="lab-name">Marketing AI studio</div>
+      <div class="lab-desc">Full-stack content factory: Claude generates copy, briefs for designers, email sequences, and social calendars from a single campaign brief.</div>
+      <span class="lab-badge badge-purple">Claude + Artifacts</span>
+    </div>
+    <div class="lab-card" onclick="sendPrompt('What is an Agent Copilot for travel advisors at Zondela?')">
+      <div class="lab-num">06</div>
+      <div class="lab-name">Agent copilot</div>
+      <div class="lab-desc">Real-time assistant during client calls — surfaces relevant packages, pricing, and availability while the advisor talks.</div>
+      <span class="lab-badge badge-teal">Claude API</span>
+    </div>
+    <div class="lab-card" onclick="sendPrompt('Build a destination intelligence engine for Zondela Travel')">
+      <div class="lab-num">07</div>
+      <div class="lab-name">Destination intelligence engine</div>
+      <div class="lab-desc">Claude monitors travel trends, visa changes, safety advisories, and booking velocity for 50+ destinations — daily digest for the team.</div>
+      <span class="lab-badge badge-gold">Research + Claude</span>
+    </div>
+    <div class="lab-card" onclick="sendPrompt('How would a client journey AI work for Zondela from first contact to return trip?')">
+      <div class="lab-num">08</div>
+      <div class="lab-name">Client journey AI</div>
+      <div class="lab-desc">Tracks each client from first contact to post-trip follow-up — automates touchpoints, upsell moments, and anniversary reminders.</div>
+      <span class="lab-badge badge-coral">Claude + CRM</span>
+    </div>
+    <div class="lab-card" onclick="sendPrompt('What is predictive travel demand forecasting for Zondela?')">
+      <div class="lab-num">09</div>
+      <div class="lab-name">Predictive demand model</div>
+      <div class="lab-desc">Claude analyzes macro signals (currency, holidays, travel trends) to forecast demand by destination 90 days out — enabling proactive stocking.</div>
+      <span class="lab-badge badge-blue">Claude Analysis</span>
+    </div>
+    <div class="lab-card" onclick="sendPrompt('Design a Zondela client self-service portal powered by Claude')">
+      <div class="lab-num">10</div>
+      <div class="lab-name">Self-service client portal</div>
+      <div class="lab-desc">Clients log in to view their itinerary, request changes, upload documents, and chat with their AI concierge — all powered by Claude.</div>
+      <span class="lab-badge badge-purple">Claude Code + Artifacts</span>
+    </div>
+  </div>
+</section>
+
+<!-- COWORK -->
+<section id="cowork" class="section">
+  <h2 class="sec-title">Human + Claude cowork model</h2>
+  <p class="sec-sub">Claude isn't a tool you open occasionally. It's a permanent team member embedded in every role — amplifying what humans do best.</p>
+  <div class="cowork-grid">
+    <div class="cw-card">
+      <div class="cw-role">Claude as strategist</div>
+      <div class="cw-tasks">Market analysis · Growth planning · Competitive intelligence · OKR structuring · Scenario modeling</div>
+    </div>
+    <div class="cw-card">
+      <div class="cw-role">Claude as analyst</div>
+      <div class="cw-tasks">Revenue reports · Customer segmentation · A/B test analysis · ROI models · Dashboard generation</div>
+    </div>
+    <div class="cw-card">
+      <div class="cw-role">Claude as designer</div>
+      <div class="cw-tasks">Creative briefs · Copy variants · Brand review · Campaign concepts · Landing page structure</div>
+    </div>
+    <div class="cw-card">
+      <div class="cw-role">Claude as developer</div>
+      <div class="cw-tasks">Build internal tools · Write automations · Debug code · API integrations · CRM scripts</div>
+    </div>
+    <div class="cw-card">
+      <div class="cw-role">Claude as exec assistant</div>
+      <div class="cw-tasks">Meeting prep · Email drafting · Research briefs · Decision summaries · Weekly digests</div>
+    </div>
+    <div class="cw-card">
+      <div class="cw-role">Claude as knowledge base</div>
+      <div class="cw-tasks">SOPs on demand · Supplier data · Client history · Process Q&A · Onboarding new staff</div>
+    </div>
+  </div>
+  <div class="wf-block">
+    <div class="wf-title">Daily cowork workflow — advisor starts their day</div>
+    <div class="wf-steps">
+      <div class="wf-step"><div class="wf-step-box">Morning brief</div><div class="wf-step-lbl">Claude prepares</div></div>
+      <div class="wf-arr">→</div>
+      <div class="wf-step"><div class="wf-step-box">Lead review</div><div class="wf-step-lbl">Claude scores</div></div>
+      <div class="wf-arr">→</div>
+      <div class="wf-step"><div class="wf-step-box">Quote request</div><div class="wf-step-lbl">Claude drafts</div></div>
+      <div class="wf-arr">→</div>
+      <div class="wf-step"><div class="wf-step-box">Client call</div><div class="wf-step-lbl">Claude listens</div></div>
+      <div class="wf-arr">→</div>
+      <div class="wf-step"><div class="wf-step-box">Proposal sent</div><div class="wf-step-lbl">Claude builds</div></div>
+      <div class="wf-arr">→</div>
+      <div class="wf-step"><div class="wf-step-box">Follow-up</div><div class="wf-step-lbl">Claude sends</div></div>
+      <div class="wf-arr">→</div>
+      <div class="wf-step"><div class="wf-step-box">CRM updated</div><div class="wf-step-lbl">Automatic</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap" class="section">
+  <h2 class="sec-title">Implementation roadmap</h2>
+  <p class="sec-sub">Three horizons from quick wins to full AI-native transformation. Each phase builds on the last.</p>
+  <div class="rm-tabs">
+    <div class="rm-tab active" onclick="showRM('d30')"><div class="rm-tab-label">30 días</div><div class="rm-tab-sub">Quick wins</div></div>
+    <div class="rm-tab" onclick="showRM('d90')"><div class="rm-tab-label">90 días</div><div class="rm-tab-sub">Core systems</div></div>
+    <div class="rm-tab" onclick="showRM('d365')"><div class="rm-tab-label">12 meses</div><div class="rm-tab-sub">AI-native</div></div>
+  </div>
+  <div id="rm-d30" class="rm-panel active">
+    <div class="rm-list">
+      <div class="rm-item"><div class="rm-item-ico ico-blue">⚡</div><div class="rm-item-body"><div class="rm-item-title">Onboard all advisors to Claude Chat</div><div class="rm-item-desc">Daily copilot for research, emails, proposals, and client Q&A. Zero code required.</div><span class="rm-impact">Week 1 · Zero cost</span></div></div>
+      <div class="rm-item"><div class="rm-item-ico ico-teal">📄</div><div class="rm-item-body"><div class="rm-item-title">First AI-generated proposal template</div><div class="rm-item-desc">Create a reusable Claude prompt workflow for the top 5 destination types.</div><span class="rm-impact">Week 2 · 8× faster proposals</span></div></div>
+      <div class="rm-item"><div class="rm-item-ico ico-purple">✍️</div><div class="rm-item-body"><div class="rm-item-title">Launch content engine</div><div class="rm-item-desc">Claude generates weekly blog posts, social content, and email newsletters from a brief.</div><span class="rm-impact">Week 3 · 20× content output</span></div></div>
+      <div class="rm-item"><div class="rm-item-ico ico-gold">🔍</div><div class="rm-item-body"><div class="rm-item-title">Internal knowledge base pilot</div><div class="rm-item-desc">Upload SOPs and supplier docs — Claude answers internal questions instantly.</div><span class="rm-impact">Week 4 · −70% internal queries</span></div></div>
+    </div>
+  </div>
+  <div id="rm-d90" class="rm-panel">
+    <div class="rm-list">
+      <div class="rm-item"><div class="rm-item-ico ico-blue">🔧</div><div class="rm-item-body"><div class="rm-item-title">Build AI cotizador tool</div><div class="rm-item-desc">Claude Code builds an internal quote generator connected to supplier pricing data.</div><span class="rm-impact">Month 2 · Live quotes in 2 min</span></div></div>
+      <div class="rm-item"><div class="rm-item-ico ico-teal">🤖</div><div class="rm-item-body"><div class="rm-item-title">Deploy website chatbot concierge</div><div class="rm-item-desc">Claude-powered chat captures and qualifies leads 24/7 directly on the Zondela site.</div><span class="rm-impact">Month 2 · +28% web conversion</span></div></div>
+      <div class="rm-item"><div class="rm-item-ico ico-purple">📊</div><div class="rm-item-body"><div class="rm-item-title">Executive AI dashboard</div><div class="rm-item-desc">Weekly AI-generated business intelligence brief with recommendations for leadership.</div><span class="rm-impact">Month 3 · Daily decision support</span></div></div>
+      <div class="rm-item"><div class="rm-item-ico ico-gold">⚙️</div><div class="rm-item-body"><div class="rm-item-title">CRM automation layer</div><div class="rm-item-desc">Scripts that auto-update CRM, trigger follow-ups, and score leads based on activity.</div><span class="rm-impact">Month 3 · −4 hrs/week per advisor</span></div></div>
+    </div>
+  </div>
+  <div id="rm-d365" class="rm-panel">
+    <div class="rm-list">
+      <div class="rm-item"><div class="rm-item-ico ico-blue">🌐</div><div class="rm-item-body"><div class="rm-item-title">Full AI concierge platform</div><div class="rm-item-desc">WhatsApp + web bot handling 80% of tier-1 client interactions end-to-end.</div><span class="rm-impact">Q3 · Industry-leading CX</span></div></div>
+      <div class="rm-item"><div class="rm-item-ico ico-purple">🎯</div><div class="rm-item-body"><div class="rm-item-title">Personalization engine live</div><div class="rm-item-desc">Every client receives a dynamically generated trip proposal tailored to their history and preferences.</div><span class="rm-impact">Q3 · +50% repeat bookings</span></div></div>
+      <div class="rm-item"><div class="rm-item-ico ico-teal">📈</div><div class="rm-item-body"><div class="rm-item-title">Predictive demand & pricing model</div><div class="rm-item-desc">Claude forecasts demand and recommends pricing and inventory decisions 90 days ahead.</div><span class="rm-impact">Q4 · +25% margin improvement</span></div></div>
+      <div class="rm-item"><div class="rm-item-ico ico-gold">🏆</div><div class="rm-item-body"><div class="rm-item-title">Zondela = AI-native benchmark</div><div class="rm-item-desc">Every team, every workflow, every touchpoint amplified by Claude. Category leadership.</div><span class="rm-impact">Month 12 · Market differentiation</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI -->
+<section id="roi" class="section">
+  <h2 class="sec-title">ROI simulation dashboard</h2>
+  <p class="sec-sub">Conservative estimates based on typical Claude adoption in service businesses. Actual results at Zondela may be higher.</p>
+  <div class="roi-grid">
+    <div class="roi-card"><div class="roi-val blue">2,400 hrs</div><div class="roi-lbl">Horas ahorradas al año</div><div class="roi-sub">Equiv. a 1.2 FTEs adicionales</div></div>
+    <div class="roi-card"><div class="roi-val green">+$4.2M</div><div class="roi-lbl">Incremento en ventas estimado</div><div class="roi-sub">Mejora en conversión y velocidad</div></div>
+    <div class="roi-card"><div class="roi-val gold">−38%</div><div class="roi-lbl">Reducción en costo operativo</div><div class="roi-sub">Menos tiempo en tareas manuales</div></div>
+    <div class="roi-card"><div class="roi-val purple">8.4×</div><div class="roi-lbl">ROI estimado año 1</div><div class="roi-sub">Inversión vs retorno total</div></div>
+  </div>
+  <div class="roi-bar-block">
+    <div class="roi-bar-title">Productividad incremental por equipo</div>
+    <div class="rb-row"><span class="rb-label">Ventas</span><div class="rb-track"><div class="rb-fill" style="width:88%;background:#2563eb"></div></div><span class="rb-pct">+88%</span></div>
+    <div class="rb-row"><span class="rb-label">Marketing</span><div class="rb-track"><div class="rb-fill" style="width:94%;background:#7c3aed"></div></div><span class="rb-pct">+94%</span></div>
+    <div class="rb-row"><span class="rb-label">Operaciones</span><div class="rb-track"><div class="rb-fill" style="width:72%;background:#0d9488"></div></div><span class="rb-pct">+72%</span></div>
+    <div class="rb-row"><span class="rb-label">Dirección / BI</span><div class="rb-track"><div class="rb-fill" style="width:65%;background:#f59e0b"></div></div><span class="rb-pct">+65%</span></div>
+    <div class="rb-row"><span class="rb-label">Tecnología</span><div class="rb-track"><div class="rb-fill" style="width:80%;background:#f43f5e"></div></div><span class="rb-pct">+80%</span></div>
+    <div class="rb-row"><span class="rb-label">Diseño</span><div class="rb-track"><div class="rb-fill" style="width:76%;background:#10b981"></div></div><span class="rb-pct">+76%</span></div>
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:14px;border:0.5px solid var(--color-border-tertiary)">
+    <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:10px">Tiempo de retorno de inversión</div>
+    <div style="display:flex;gap:0;align-items:center">
+      <div style="flex:2;background:#eff6ff;border-radius:var(--border-radius-md) 0 0 var(--border-radius-md);padding:10px;text-align:center;border:0.5px solid #bfdbfe">
+        <div style="font-size:12px;font-weight:500;color:#1e40af">Mes 1–2</div>
+        <div style="font-size:11px;color:#3b82f6">Quick wins</div>
+      </div>
+      <div style="flex:2;background:#f0fdf4;padding:10px;text-align:center;border-top:0.5px solid #bbf7d0;border-bottom:0.5px solid #bbf7d0">
+        <div style="font-size:12px;font-weight:500;color:#166534">Mes 3–6</div>
+        <div style="font-size:11px;color:#22c55e">Break-even</div>
+      </div>
+      <div style="flex:3;background:#2563eb;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:10px;text-align:center">
+        <div style="font-size:12px;font-weight:500;color:#fff">Mes 7–12</div>
+        <div style="font-size:11px;color:#bfdbfe">ROI compuesto</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section id="vision" class="section">
+  <h2 class="sec-title">The Zondela AI-native vision</h2>
+  <p class="sec-sub">Imagine Zondela one year from now — where AI is invisible infrastructure, and every team member is 10× more powerful.</p>
+  <div class="vision-grid">
+    <div class="vision-card">
+      <div class="vision-icon">✈️</div>
+      <div class="vision-title">Every client feels like a VIP</div>
+      <div class="vision-desc">Personalized proposals, instant responses, proactive trip updates — delivered at scale, not just for top clients.</div>
+    </div>
+    <div class="vision-card">
+      <div class="vision-icon">⚡</div>
+      <div class="vision-title">Advisors close 3× more deals</div>
+      <div class="vision-desc">With Claude handling research, drafting, and follow-ups, advisors focus entirely on relationships and closing.</div>
+    </div>
+    <div class="vision-card">
+      <div class="vision-icon">📊</div>
+      <div class="vision-title">Leadership always knows what's happening</div>
+      <div class="vision-desc">Real-time AI intelligence — not lagging reports — so every decision is data-driven and forward-looking.</div>
+    </div>
+    <div class="vision-card">
+      <div class="vision-icon">🚀</div>
+      <div class="vision-title">Marketing that actually sells</div>
+      <div class="vision-desc">A content and campaign engine that runs continuously — always relevant, always on-brand, always converting.</div>
+    </div>
+    <div class="vision-card">
+      <div class="vision-icon">🤖</div>
+      <div class="vision-title">24/7 AI concierge on every channel</div>
+      <div class="vision-desc">Website, WhatsApp, Instagram DMs — Claude is always available, always helpful, always Zondela.</div>
+    </div>
+    <div class="vision-card">
+      <div class="vision-icon">🌍</div>
+      <div class="vision-title">The benchmark for AI travel in LatAm</div>
+      <div class="vision-desc">Zondela becomes the reference case for how a modern travel agency operates — a competitive moat, not just a tool.</div>
+    </div>
+  </div>
+  <div class="vision-cta">
+    <div class="vision-cta-title">Zondela is ready. The technology is here.</div>
+    <div class="vision-cta-sub">This isn't a 2030 roadmap — every capability shown here is available with Claude today.<br>The question is how fast you want to move.</div>
+    <button class="cta-btn" onclick="sendPrompt('I want to start implementing Claude at Zondela Travel. What are the first three steps we should take this week?')">Let's start implementing →</button>
+  </div>
+</section>
+
+</div>
+
+<script>
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const btns=[...document.querySelectorAll('.nav-btn')];
+  const map={hero:0,eco:1,dept:2,lab:3,cowork:4,roadmap:5,roi:6,vision:7};
+  if(map[id]!==undefined)btns[map[id]].classList.add('active');
+}
+function showDept(id){
+  document.querySelectorAll('.dept-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.dept-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('dept-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+function showRM(id){
+  document.querySelectorAll('.rm-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.rm-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('rm-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
